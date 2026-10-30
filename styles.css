@@ -7,12 +7,14 @@
   --f-body:system-ui,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
   --f-mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
   --r:10px;
+  --tip-bg:#e9f0f4; --tip-fg:#1d2c37; --tip-line:#c3d1da;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#0e161c; --surface:#16212a; --ink:#e7eef3; --muted:#96a6b3; --line:#293742;
     --accent:#52c3e0; --on-accent:#08222b; --accent-soft:#16323c;
     --ok:#52d18f; --ok-bg:#12321f; --bad:#ff8c7d; --bad-bg:#3a1c18; --warn:#f0c15a; --warn-bg:#392c10;
+    --tip-bg:#22333f; --tip-fg:#e7eef3; --tip-line:#38505f;
     color-scheme:dark;
   }
 }
@@ -20,6 +22,7 @@
   --bg:#0e161c; --surface:#16212a; --ink:#e7eef3; --muted:#96a6b3; --line:#293742;
   --accent:#52c3e0; --on-accent:#08222b; --accent-soft:#16323c;
   --ok:#52d18f; --ok-bg:#12321f; --bad:#ff8c7d; --bad-bg:#3a1c18; --warn:#f0c15a; --warn-bg:#392c10;
+  --tip-bg:#22333f; --tip-fg:#e7eef3; --tip-line:#38505f;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -172,11 +175,11 @@ details.r .qru{margin-top:0}
 .langmenu button{display:flex;justify-content:flex-start;align-items:center;gap:10px;width:100%;min-height:44px;padding:0 12px;border:0;border-radius:10px;background:transparent;color:var(--ink);font-size:16px;text-align:left}
 .langmenu button:hover,.langmenu button:focus-visible{background:var(--accent-soft,rgba(10,111,140,.12))}
 .langmenu button[aria-checked="true"]{font-weight:700;color:var(--accent)}
-.toast{position:absolute;z-index:40;display:flex;gap:10px;align-items:flex-start;padding:12px 12px 12px 14px;border-radius:12px;background:var(--ink);color:var(--bg);font-size:14px;line-height:1.4;box-shadow:0 8px 28px rgba(0,0,0,.3)}
+.toast{position:absolute;z-index:40;display:flex;gap:10px;align-items:flex-start;padding:12px 12px 12px 14px;border-radius:12px;background:var(--tip-bg);color:var(--tip-fg);border:1px solid var(--tip-line);font-size:14px;line-height:1.4;box-shadow:0 6px 20px rgba(0,0,0,.14)}
 .toast span{flex:1}
-.toast .arrow{position:absolute;width:12px;height:12px;background:var(--ink);transform:translateX(-50%) rotate(45deg)}
-.toast.up .arrow{bottom:-5px}
-.toast.down .arrow{top:-5px}
+.toast .arrow{position:absolute;width:12px;height:12px;background:var(--tip-bg);border:1px solid var(--tip-line);transform:translateX(-50%) rotate(45deg)}
+.toast.up .arrow{bottom:-7px;border-top:0;border-left:0}
+.toast.down .arrow{top:-7px;border-bottom:0;border-right:0}
 .toast button{border:0;background:transparent;color:inherit;font-size:24px;line-height:1;min-width:32px;min-height:32px;padding:0}
 .top p.about{color:var(--ink);margin-top:8px}
 .langsw{display:inline-flex;border:1px solid var(--line);border-radius:99px;background:var(--surface);padding:3px}
