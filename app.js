@@ -399,7 +399,7 @@ function seg(label, options, value, onpick){
     h('span', {class:'eyebrow'}, label),
     h('div', {class:'segs', role:'group', 'aria-label':label},
       options.map(function(o){
-        return h('button', {class:'seg', type:'button', 'aria-pressed': String(o.v === value), disabled: !!o.off, onclick:function(){ onpick(o.v); }},
+        return h('button', {class:'seg', type:'button', 'data-v': String(o.v), 'aria-pressed': String(o.v === value), disabled: !!o.off, onclick:function(){ onpick(o.v); }},
           o.t, o.n != null ? h('small', {class:'mono'}, o.n) : null);
       })));
 }
@@ -436,7 +436,7 @@ function viewHome(){
       {v:'wrong', t:t('Ошибки', 'Mistakes'), n:bad, off:!bad},
       {v:'flag', t:t('Отмеченные', 'Flagged '), n:flagged, off:!flagged},
       {v:'warn', t:t('⚠️ Спорные', '⚠️ Disputed'), n:warnN, off:!warnN}
-    ], s.src, function(v){ s.src = v; save(); render(); if (v === 'warn') toast(t('⚠️ Спорные: вопросы, где ключ ответа расходится со Scrum Guide 2020 или касается практик вне Scrum. Проверяй их по Guide.', '⚠️ Disputed: questions where the answer key conflicts with the Scrum Guide 2020 or covers practices outside Scrum. Check them against the Guide.')); }),
+    ], s.src, function(v){ s.src = v; save(); render(); if (v === 'warn') toast(t('⚠️ Спорные: вопросы, где ключ ответа расходится со Scrum Guide 2020 или касается практик вне Scrum. Проверяй их по Guide.', '⚠️ Disputed: questions where the answer key conflicts with the Scrum Guide 2020 or covers practices outside Scrum. Check them against the Guide.'), app.querySelector('.seg[data-v="warn"]')); }),
     seg(t('Сколько', 'How many'), [{v:10,t:'10'},{v:20,t:'20'},{v:50,t:'50'},{v:'all',t:t('Все', 'All')}], s.count, function(v){ s.count = v; save(); render(); }),
     seg(t('Порядок вопросов', 'Question order'), [{v:'random',t:t('Вперемешку', 'Random')},{v:'seq',t:t('По номерам', 'By number')}], s.order, function(v){ s.order = v; save(); render(); }),
     ui() === 'en' ? null : seg(t('Язык вопросов', 'Question language'), [{v:'en',t:'English'},{v:'bi',t:lx({ru:'English + русский по кнопке', de:'English + Deutsch auf Knopfdruck', es:'English + español con el botón'})}], s.lang, function(v){ s.lang = v; save(); render(); }),
@@ -715,16 +715,28 @@ function renderTools(){
 document.addEventListener('click', function(){ closeLang(); });
 document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && langOpen){ langOpen = false; renderTools(); var b = tools.querySelector('.langbtn'); if (b) b.focus(); } });
 
-/* toast */
+/* popover tip above an element */
 var toastEl = null, toastTimer = null;
-function toast(msg){
-  if (toastEl) toastEl.remove(); clearTimeout(toastTimer);
+function hideToast(){ clearTimeout(toastTimer); if (toastEl){ toastEl.remove(); toastEl = null; } }
+function toast(msg, anchor){
+  hideToast();
   toastEl = h('div', {class:'toast', role:'status'}, h('span', null, msg),
-    h('button', {type:'button', 'aria-label':t('Закрыть', 'Close'), onclick:function(){ toastEl.remove(); toastEl = null; }}, '×'));
+    h('button', {type:'button', 'aria-label':t('Закрыть', 'Close'), onclick:hideToast}, '×'),
+    h('i', {class:'arrow', 'aria-hidden':'true'}));
   document.body.appendChild(toastEl);
-  toastTimer = setTimeout(function(){ if (toastEl){ toastEl.remove(); toastEl = null; } }, 9000);
+  if (anchor){
+    var r = anchor.getBoundingClientRect(), vw = document.documentElement.clientWidth;
+    var w = Math.min(320, vw - 24); toastEl.style.width = w + 'px';
+    var cx = r.left + r.width/2, left = Math.max(12, Math.min(cx - w/2, vw - w - 12));
+    var hgt = toastEl.offsetHeight, above = r.top >= hgt + 20;
+    toastEl.style.left = (left + window.scrollX) + 'px';
+    toastEl.style.top = (above ? r.top + window.scrollY - hgt - 12 : r.bottom + window.scrollY + 12) + 'px';
+    toastEl.classList.add(above ? 'up' : 'down');
+    toastEl.querySelector('.arrow').style.left = Math.max(14, Math.min(cx - left, w - 14)) + 'px';
+  }
+  toastTimer = setTimeout(hideToast, 3500);
 }
-try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(){ if (P.set.theme === 'auto'){ applyTheme(); renderTools(); } }); } catch(e){}
+window.addEventListener('resize', hideToast);
 
 function render(){
   var v = !S ? viewHome() : (S.view === 'result' ? viewResult() : viewQuiz());

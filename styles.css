@@ -172,8 +172,11 @@ details.r .qru{margin-top:0}
 .langmenu button{display:flex;justify-content:flex-start;align-items:center;gap:10px;width:100%;min-height:44px;padding:0 12px;border:0;border-radius:10px;background:transparent;color:var(--ink);font-size:16px;text-align:left}
 .langmenu button:hover,.langmenu button:focus-visible{background:var(--accent-soft,rgba(10,111,140,.12))}
 .langmenu button[aria-checked="true"]{font-weight:700;color:var(--accent)}
-.toast{position:fixed;left:16px;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));max-width:480px;margin:0 auto;z-index:40;display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:14px;background:var(--ink);color:var(--bg);font-size:15px;line-height:1.45;box-shadow:0 8px 28px rgba(0,0,0,.3)}
+.toast{position:absolute;z-index:40;display:flex;gap:10px;align-items:flex-start;padding:12px 12px 12px 14px;border-radius:12px;background:var(--ink);color:var(--bg);font-size:14px;line-height:1.4;box-shadow:0 8px 28px rgba(0,0,0,.3)}
 .toast span{flex:1}
+.toast .arrow{position:absolute;width:12px;height:12px;background:var(--ink);transform:translateX(-50%) rotate(45deg)}
+.toast.up .arrow{bottom:-5px}
+.toast.down .arrow{top:-5px}
 .toast button{border:0;background:transparent;color:inherit;font-size:24px;line-height:1;min-width:32px;min-height:32px;padding:0}
 .top p.about{color:var(--ink);margin-top:8px}
 .langsw{display:inline-flex;border:1px solid var(--line);border-radius:99px;background:var(--surface);padding:3px}
